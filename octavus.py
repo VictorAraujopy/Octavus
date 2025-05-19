@@ -11,6 +11,7 @@ import numpy as np
 import pywhatkit as kit  
 from database import tabela, registrar
 import re
+from respostas_OC import obter_resposta
 
 
 tabela()
@@ -24,7 +25,6 @@ contatos = {
 
 # Carrega modelos e encoders
 modelo_intencoes = load("modelo_octavus.pkl")      # classificador de intenções
-modelo_resposta, encoder_resposta = load("resp_noa.pkl")  # pipeline de respostas + encoder
 
 # Configura caminho do ffmpeg
 os.environ["PATH"] += os.pathsep + r"C:\Users\vicit\Desktop\ffmpeg-7.1.1-essentials_build\bin"
@@ -35,11 +35,12 @@ AudioSegment.ffprobe = r"C:/Users/vicit/Desktop/ffmpeg-7.1.1-essentials_build/bi
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\vicit\Desktop\projeto octavus\key.json"
 
 print("octavus iniciando...")
+
 reconhedor = sr.Recognizer()
 
 # Função para ocavusfalar
 def oc_fala(texto):
-    print(f"NOA:{texto}")
+    print(f"OC:{texto}")
     client = texttospeech.TextToSpeechClient()
     input_text = texttospeech.SynthesisInput(text=texto)
     voice = texttospeech.VoiceSelectionParams(language_code='pt-BR', ssml_gender=texttospeech.SsmlVoiceGender.MALE)
@@ -81,31 +82,8 @@ def identificar_intencao(comando):
     # Previsão retorna a string da intenção diretamente
     return modelo_intencoes.predict([comando])[0]
 
-# Função principal
-def obter_resposta(intencao):
-    try:
-        # Gera probabilidades para todas as respostas
-        probas = modelo_resposta.predict_proba([intencao])[0]
-        
-        # Escolhe aleatoriamente baseado nas probabilidades
-        indices = np.random.choice(
-            len(probas), 
-            size=3,  # Tenta 3 vezes para variedade
-            p=probas,
-            replace=False
-        )
-        
-        # Pega a primeira resposta válida
-        for idx in indices:
-            resposta = encoder_resposta.inverse_transform([idx])[0]
-            if resposta != '':  # Verifica se é válida
-                return resposta.capitalize()
-        
-        return "Desculpe, não entendi."
-    
-    except Exception as e:
-        print(f"Erro na resposta: {e}")
-        return "Vou executar isso para você!"
+
+
     
 
 def processar_comando_mensagem(comando):
