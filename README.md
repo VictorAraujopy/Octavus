@@ -35,14 +35,8 @@ Configuração do caminho do ffmpeg e variável de ambiente para o JSON da API.
 Contatos
 Dicionário com nomes e números para envio automático de mensagens via WhatsApp.
 
-python
-Copier
-Modifier
-contatos = {
-    "namorada": "+55 11 98945-9610", 
-    "tati": "+55 11 96303-9889",
-    "gps": "+55 11 99453-2056",
-}
+
+
 Funções principais
 oc_fala(texto)
 Recebe uma string de texto.
