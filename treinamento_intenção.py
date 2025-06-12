@@ -36,7 +36,3 @@ print(classification_report(y_teste, y_pred))
 
 joblib.dump(modelo, "modelo_octavus.pkl")
 print("modelo treinado e salvo" )
-
-
-
-
