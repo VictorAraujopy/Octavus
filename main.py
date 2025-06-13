@@ -19,19 +19,19 @@ contatos = {
     "namorada": "+55 11 98945-9610", 
     "tati": "+55 11 96303-9889",
     "gps": "+55 11 99453-2056",
-     
+    "namorado": "+55 11 91107-1964"     
 }
 
 # Carrega modelos e encoders
 modelo_intencoes = load("modelo_octavus.pkl")      # classificador de intenções
 
 # Configura caminho do ffmpeg
-os.environ["PATH"] += os.pathsep + r"C:\Users\vicit\Desktop\ffmpeg-7.1.1-essentials_build\bin"
-AudioSegment.converter = r"C:/Users/vicit/Desktop/ffmpeg-7.1.1-essentials_build/bin/ffmpeg.exe"
-AudioSegment.ffprobe = r"C:/Users/vicit/Desktop/ffmpeg-7.1.1-essentials_build/bin/ffprobe.exe"
+os.environ["PATH"] += os.pathsep + r"ffmpeg-7.1.1-essentials_build\bin"
+AudioSegment.converter = r"ffmpeg-7.1.1-essentials_build\bin\ffmpeg.exe"
+AudioSegment.ffprobe = r"ffmpeg-7.1.1-essentials_build\bin\ffprobe.exe"
 
 # Configuração da chave da API Google
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\vicit\Desktop\projeto octavus\key.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
 
 
 
@@ -85,38 +85,8 @@ def identificar_intencao(comando):
 
     
 
-def processar_comando_mensagem(comando):
-    padrao = r"envi(?:ar|a) mensagem (?:para|pra) (\w+)(?: (?:dizendo|falando))? (.+)"
-
-    match = re.search(padrao, comando.lower())
-    
-    if match:
-        nome = match.group(1)  
-        mensagem = match.group(2)  
-        
-        if nome in contatos:
-            numero = contatos[nome]
-            hora = time.localtime().tm_hour
-            minuto = time.localtime().tm_min + 1
-            if minuto >= 60:
-                minuto = 0
-                hora = (hora + 1) % 24
-            try:
-                kit.sendwhatmsg_instantly(
-    numero,           # número no formato "+55XXXXXXXXXXX"
-    mensagem,         # texto da mensagem
-    wait_time=10,     # segundos para aguardar o carregamento da página antes de digitar
-    tab_close=True,   # fecha a aba após o envio
-    close_time=3      # segundos para aguardar antes de fechar a aba
-)
-                registrar(nome, numero, mensagem)
-                return f"Mensagem enviada para {nome} com sucesso!"
-            except Exception as e:
-                return f"Ocorreu um erro ao enviar: {str(e)}"
-        else:
-            return f"Contato {nome} não encontrado."
-    else:
-        return "Formato inválido. Diga: enviar mensagem para [nome] dizendo [mensagem]."
+#def processar_comando_mensagem(comando):
+   #standby
         
 
 # Função principal modificada
@@ -137,15 +107,11 @@ def iniciar_oc():
             elif intencao == 'fechar_spotify':
                 subprocess.run(['taskkill', '/im', 'Spotify.exe', '/f'], shell=True)
             elif intencao == 'abrir_spotify':
-                subprocess.Popen(r"C:\Users\vicit\AppData\Local\Microsoft\WindowsApps\Spotify.exe", shell=True)
+                subprocess.Popen(['start', 'spotify:'], shell=True)
             elif intencao == 'fechar_red':
                 subprocess.run(['taskkill', '/im', 'RDR2.exe', '/f'], shell=True)
             elif intencao == 'abrir_red':
-                subprocess.Popen(r"D:\Red Dead Redemption 2\RDR2.exe", shell=True)
-
-            elif intencao == 'enviar_mensagem':
-                 resposta = processar_comando_mensagem(comando)
-                 oc_fala(resposta)
+                subprocess.Popen("RDR2.exe", shell=True)
         else:
             oc_fala("comando desconhecido")
 

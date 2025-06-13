@@ -9,7 +9,7 @@ import joblib
 
 
 
-dados = pd.read_csv(r"C:\Users\vicit\Desktop\projeto octavus\intencoes.csv")  #le o arquivo csv
+dados = pd.read_csv("intencoes.csv")  #le o arquivo csv
 
 
 x = dados["frase"]

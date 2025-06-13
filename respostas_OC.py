@@ -15,9 +15,9 @@ respostas = {
         "ja estou abrindo o spotify"
     ],
     "fechar_spotify": [
-        "fechando player de musica",
+        "fechando player de música",
         "saindo do spotify",
-        "interrompendo sua musica",
+        "interrompendo sua música",
         "parando spotify",
         "ok encerrando o spotify",
         "encerrando player agora",
