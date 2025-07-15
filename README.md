@@ -1,153 +1,66 @@
-Octavus - Assistente Virtual com Machine Learning
-Este projeto é um assistente virtual em português, que utiliza reconhecimento de voz, síntese de fala e machine learning para entender e responder comandos, além de executar ações no computador e enviar mensagens via WhatsApp.
+# Octavus - Assistente Virtual com Machine Learning 🇧🇷🧠💬
 
-Visão geral do funcionamento
-O Octavus é uma assistente pessoal que:
+O **Octavus** é um assistente virtual em português que entende sua voz, responde com fala sintetizada e realiza ações no seu computador, tudo isso utilizando **Machine Learning**, **Reconhecimento de Fala**, **Text-to-Speech** e integração com **WhatsApp**. É como ter uma IA pessoal rodando localmente!
 
-Escuta comandos de voz pelo microfone.
+> ⚠️ **Aviso:** As funcionalidades de envio de mensagens via WhatsApp e registro no banco de dados SQLite estão temporariamente desativadas.
 
-Reconhece a fala usando a API do Google ou Google Speech Recognition.
+---
 
-Identifica a intenção do comando usando um modelo de machine learning treinado.
+## 🚀 Visão Geral
 
-Gera uma resposta apropriada usando um modelo de respostas baseado na intenção.
+O Octavus:
 
-Executa ações específicas no computador conforme o comando (ex: abrir apps, enviar mensagens).
+- Escuta comandos de voz pelo microfone.
+- Usa **Google Speech Recognition** para transcrever o áudio.
+- Utiliza um modelo de ML para identificar a intenção do comando.
+- Gera uma resposta com base na intenção detectada.
+- Executa ações como abrir apps ou responder com fala.
+- Usa a **Google Cloud Text-to-Speech** para sintetizar a resposta.
+- (Opcional) Envia mensagens via WhatsApp e salva no banco (atualmente desativado).
 
-Responde por voz com áudio sintetizado pela Google Text-to-Speech.
+---
 
-Registra mensagens enviadas num banco de dados SQLite local.
+## 🧠 Estrutura e Funcionamento
 
-Estrutura do código principal (octavus.py)
-Importações e configurações
-Usa speech_recognition para captar voz.
+### Arquivo principal: `octavus.py`
 
-Google Cloud Text-to-Speech para sintetizar áudio.
+- Reconhecimento de fala com `speech_recognition`
+- Fala sintetizada com `google.cloud.texttospeech`
+- Reprodução de áudio com `pydub`
+- Modelos de ML carregados com `joblib`
+- Integração com banco de dados (`database.py`)
+- Configuração de `ffmpeg` e chave JSON do Google
 
-pydub para tocar arquivos MP3 gerados.
 
-Modelos de ML carregados com joblib (modelo_octavus.pkl e resp_noa.pkl).
+## 📌 Requisitos
 
-Banco SQLite acessado via módulo database.py.
+- Python 3.8+
+- `speech_recognition`, `pydub`, `google-cloud-texttospeech`, `joblib`, `pywhatkit`, etc.
+- **FFmpeg** (necessário para reprodução de áudio com `pydub`)
 
-Configuração do caminho do ffmpeg e variável de ambiente para o JSON da API.
+---
 
-Contatos
-Dicionário com nomes e números para envio automático de mensagens via WhatsApp.
+## ⚙️ Como instalar o FFmpeg
 
-python
-Copier
-Modifier
-contatos = {
-    "namorada": "+55 11 98945-9610", 
-    "tati": "+55 11 96303-9889",
-    "gps": "+55 11 99453-2056",
-}
-Funções principais
-oc_fala(texto)
-Recebe uma string de texto.
+O FFmpeg é uma ferramenta essencial para manipulação e reprodução de áudio. Você precisa baixar e configurar ele para que o Octavus funcione corretamente.
 
-Converte texto em fala usando Google Text-to-Speech.
+1. Baixe o FFmpeg no site oficial: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
 
-Salva o áudio em MP3 temporário.
+2. Escolha a versão para o seu sistema operacional (Windows, Linux, Mac).
 
-Reproduz o áudio com pydub.
+3. Extraia o conteúdo para uma pasta no seu computador (ex: `C:\ffmpeg` no Windows).
 
-Remove o arquivo temporário.
+4. Adicione o caminho da pasta `bin` do FFmpeg à variável de ambiente PATH do seu sistema:
 
-ouvir_comando()
-Escuta o microfone com ajuste de ruído ambiente.
+   - No Windows:  
+     Vá em **Painel de Controle > Sistema > Configurações Avançadas > Variáveis de Ambiente**  
+     Edite a variável `PATH` e adicione algo como:  
+     `C:\ffmpeg\bin`
 
-Converte áudio em texto (reconhecimento de fala).
+   - No Linux/Mac:  
+     Adicione a linha abaixo no seu `.bashrc` ou `.zshrc`:  
+     ```bash
+     export PATH=$PATH:/caminho/para/ffmpeg/bin
+     ```
 
-Retorna o texto convertido ou string vazia em caso de erro.
-
-identificar_intencao(comando)
-Recebe texto do comando.
-
-Usa modelo de ML para prever a intenção da frase.
-
-Retorna a intenção como string (ex: "abrir_spotify", "enviar_mensagem").
-
-obter_resposta(intencao)
-Recebe a intenção prevista.
-
-Usa outro modelo para gerar respostas possíveis.
-
-Seleciona uma resposta com base em probabilidades, para variar as respostas.
-
-Retorna uma resposta em texto.
-
-processar_comando_mensagem(comando)
-Detecta se o comando é para enviar mensagem via WhatsApp.
-
-Extrai destinatário e mensagem usando regex.
-
-Envia a mensagem com pywhatkit.
-
-Registra a mensagem no banco de dados.
-
-Retorna confirmação ou mensagem de erro.
-
-Loop principal (iniciar_oc())
-Dá uma mensagem inicial de boas-vindas.
-
-Entra em loop infinito:
-
-Escuta o comando do usuário.
-
-Identifica a intenção.
-
-Se for conhecida:
-
-Gera uma resposta.
-
-Executa a ação correspondente (abrir app, fechar app, enviar mensagem).
-
-Responde por voz.
-
-Se for desconhecida, ignora.
-
-Finaliza se o comando for para encerrar a conversa.
-
-Outros arquivos
-database.py
-Cria e conecta a um banco SQLite local octavus.db.
-
-Cria tabela para armazenar mensagens enviadas.
-
-Função para registrar destinatário, número, mensagem e data/hora do envio.
-
-treinamento_intencao.py
-Treina modelo de machine learning para classificação das intenções.
-
-Usa pipeline com CountVectorizer + MultinomialNB.
-
-Separa dados em treino e teste (80/20).
-
-Salva modelo treinado em modelo_octavus.pkl.
-
-respostas_training.py
-Treina modelo para gerar respostas baseadas na intenção.
-
-Usa pipeline com TfidfVectorizer + MultinomialNB.
-
-Usa LabelEncoder para codificar respostas.
-
-Salva pipeline e encoder em resp_noa.pkl.
-
-Fluxo completo da assistente
-Usuário fala pelo microfone.
-
-Texto é extraído via reconhecimento de voz.
-
-Texto é passado para modelo de intenções.
-
-Intenção identificada é passada para modelo de respostas.
-
-Resposta gerada é falada para o usuário.
-
-Se intenção envolver ação (ex: abrir app, enviar mensagem), a ação é executada.
-
-Se enviar mensagem, registra no banco SQLite.
-
+5. Reinicie o terminal/PC para as alterações entrarem em vigor.
